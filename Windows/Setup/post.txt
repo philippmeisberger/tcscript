@@ -1,0 +1,7 @@
+TCScript
+-----------
+
+WICHTIGER HINWEIS:
+Bitte bearbeiten Sie nun die Datei tcscript.conf.cmd im TrueCrypt-Installationsverzeichnis (Standard: C:\Program Files\TrueCrypt\), um TCScript nutzen zu können!
+
+Informationen zur Bearbeitung der Datei: http://www.pm-codeworks.de/tcscript.html

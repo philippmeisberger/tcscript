@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if ( test "$1" = "remove" ); then
+    update-rc.d tcscript remove
+fi
+
+exit "${?}"

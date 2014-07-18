@@ -1,0 +1,82 @@
+Command Line Usage
+
+Note that this section applies to the Windows version of TrueCrypt
+
+/help or /?     Display command line help.
+
+/volume or /v   Path to a TrueCrypt volume to mount (do not use when dismounting). For a file-hosted volume, the path must include the filename. To mount a partition/device-hosted volume, use, for example, /v \Device\Harddisk1\Partition3 (to determine the path to a partition/device, run TrueCrypt and click Select Device). You can also mount a partition or dynamic volume using its volume name (for example, /v \\?\Volume{5cceb196-48bf-46ab-ad00-70965512253a}\). To determine the volume name use e.g. mountvol.exe. Also note that device paths are case-sensitive.
+
+/letter or /l   Driver letter to mount the volume as. When /l is omitted and when /a is used, the first free drive letter is used.
+
+/explore or /e  Open an Explorer window after a volume has been mounted.
+
+/beep or /b     Beep after a volume has been successfully mounted or dismounted.
+
+/auto or /a     If no parameter is specified, automatically mount the volume. If devices is specified as the parameter (e.g., /a devices), auto-mount all currently accessible device/partition-hosted TrueCrypt volumes. If favorites is specified as the parameter, auto-mount favorite volumes designated as "mount upon logon". Note that /auto is implicit if /quit and /volume are specified. If you need to prevent the application window from appearing, use /quit.
+
+/dismount or /d  Dismount volume specified by drive letter (e.g., /d x). When no drive letter is specified, dismounts all currently mounted TrueCrypt volumes.
+
+/force or /f    Forces dismount (if the volume to be dismounted contains files being used by the system or an application) and forces mounting in shared mode (i.e., without exclusive access).
+
+/keyfile or /k  Specifies a keyfile or a keyfile search path. For multiple keyfiles, specify e.g.:
+                /k c:\keyfile1.dat /k d:\KeyfileFolder /k c:\kf2
+                To specify a keyfile stored on a security token or smart card, use the following syntax: token://slot/SLOT_NUMBER/file/FILE_NAME
+
+/tokenlib       Use the specified PKCS #11 library for security tokens and smart cards.
+
+/cache or /c    y or no parameter: enable password cache; n: disable password cache (e.g., /c n). Note that turning the password cache off will not clear it (use /w to clear the password cache).
+
+/history or /h  y or no parameter: enables saving history of mounted volumes; n: disables saving history of mounted volumes (e.g., /h n).
+
+/wipecache or /w  Wipes any passwords cached in the driver memory.
+
+/password or /p   The volume password. If the password contains spaces, it must be enclosed in quotation marks (e.g., /p "My Password"). Use /p "" to specify an empty password. Warning: This method of entering a volume password may be insecure, for example, when an unencrypted command prompt history log is being saved to unencrypted disk.
+
+/quit or /q       Automatically perform requested actions and exit (main TrueCrypt window will not be displayed). If preferences is specified as the parameter (e.g.,
+		  /q preferences), then program settings are loaded/saved and they override settings specified on the command line.
+		  /q background launches the TrueCrypt Background Task (tray icon) unless it is disabled in the Preferences.
+
+/silent or /s     If /q is specified, suppresses interaction with the user (prompts, error messages, warnings, etc.). If /q is not specified, this option has no effect.
+
+/mountoption or /m  ro or readonly: Mount volume as read-only.
+                    rm or removable: Mount volume as removable medium.
+                    ts or timestamp: Do not preserve container modification timestamp.
+                    sm or system: Without pre-boot authentication, mount a partition that is within the key scope of system encryption (for example, a partition located on the encrypted system drive of another operating system that is not running). Useful e.g. for backup or repair operations.
+                    Note: If you supply a password as a parameter of /p, make sure that the password has been typed using the standard US keyboard layout (in contrast, the GUI ensures this automatically). This is required due to the fact that the password needs to be typed in the pre-boot environment (before Windows starts) where non-US Windows keyboard layouts are not available.
+
+                    bk or headerbak: Mount volume using embedded backup header.
+                    Note: All volumes created by TrueCrypt 6.0 or later contain an embedded backup header (located at the end of the volume).
+
+                    recovery: Do not verify any checksums stored in the volume header. This option should be used only when the volume header is damaged and the volume cannot be mounted even with the mount option headerbak.
+                    
+                    Example: /m ro. To specify multiple mount options, use e.g.: /m rm /m ts
+
+
+TrueCrypt Format.exe (TrueCrypt Volume Creation Wizard):
+
+/noisocheck or /n  Do not verify that TrueCrypt Rescue Disks are correctly burned. WARNING: Never attempt to use this option to facilitate the reuse of a previously created TrueCrypt Rescue Disk. Note that every time you encrypt a system partition/drive, you must create a new TrueCrypt Rescue Disk even if you use the same password. A previously created TrueCrypt Rescue Disk cannot be reused as it was created for a different master key.
+
+
+Syntax
+
+TrueCrypt.exe [/a [devices|favorites]] [/b] [/c [y|n]] [/d [drive letter]] [/e] [/f] [/h [y|n]] [/k keyfile or search path] [/l drive letter] [/m {bk|rm|recovery|ro|sm|ts}] [/p password] [/q [background|preferences]] [/s] [/v volume] [/w]
+
+"TrueCrypt Format.exe" [/n]
+
+Note that the order in which options are specified does not matter.
+
+Examples
+
+Mount the volume d:\ myvolume as the first free drive letter, using the password prompt (the main program window will not be displayed):
+
+truecrypt /q /v d:\myvolume
+
+
+Dismount a volume mounted as the drive letter X (the main program window will not be displayed):
+
+truecrypt /q /dx
+
+
+Mount a volume called myvolume.tc using the password MyPassword, as the drive letter X. TrueCrypt will open an explorer window and beep; mounting will be automatic:
+
+truecrypt /v myvolume.tc /lx /a /p MyPassword /e /b

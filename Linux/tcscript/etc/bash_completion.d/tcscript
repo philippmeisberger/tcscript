@@ -1,0 +1,18 @@
+## bash completion for tcscript
+##
+
+_tcscript() {
+
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="--mount --dismount --auto --interactive --silent --debug --help --version"
+
+    if [[ ${cur} == -* ]] ; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+}
+
+complete -o plusdirs -F _tcscript tcscript

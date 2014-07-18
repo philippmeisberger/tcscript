@@ -1,0 +1,17 @@
+Package: tcscript
+Version: 2.5
+Section: system
+Priority: optional
+Recommends: truecrypt, zenity
+Architecture: all
+Installed-Size: 10
+Maintainer: Philipp Meisberger <team@pm-codeworks.de>
+Homepage: www.pm-codeworks.de/tcscript.html
+Description: TrueCrypt mounting and dismounting shell script.
+  This script simplifies the mounting and dismounting routine of a TrueCrypt volume. 
+  .
+  Note: TrueCrypt has to be installed to use this package!
+  .
+  It is recommend that a keyfile is used for the decryption of the volume.
+  Then this keyfile can be on a external SD card (token). The script can be used
+  to mount a TrueCrypt volume while booting. 

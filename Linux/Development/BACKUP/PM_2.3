@@ -1,0 +1,200 @@
+#!/bin/sh
+##
+## PM TrueCrypt mounting and dismounting script. 
+## Version: 2.3
+## Author: Philipp Meisberger <team@pm-codeworks.de> 
+## Depends: truecrypt zenity
+##
+## Using: PM [Action] [Options] 
+## Action: --mount|--dismount|--auto
+## Options (optional): --silent|--non-interactive
+## 
+## Action
+## --mount:             Mount a decrypted TrueCrypt volume. 
+## --dismount:          Dismount a Truecrypt volume. 
+## --auto:              Either mount a Truecrypt volume if it is dismounted or dismount a TrueCrypt volume if it is mounted.
+##
+## Options
+## --silent:            Suppress errors if keyfile or token device was not found.
+## --non-interactive:   Suppress GTK+ messages.
+##
+
+# ID for device being mounted
+MOUNTDEVICE=/dev/disk/by-id/ata-SAMSUNG_SSD_830_Series_S0Z4NEAC936383-part4
+
+# Path to directory where volume shall be mounted
+MOUNTPATH=/media/PM
+
+# ID for device containing keyfile
+TOKENDEVICE=/dev/disk/by-id/usb-Multiple_Card_Reader_058F63666433-0:0-part1
+
+# Path to directory where token shall be mounted
+TOKENPATH=/media/SDCard
+
+# Path to keyfile used for TrueCrypt volume decryption
+KEYFILE=$TOKENPATH/Key
+
+## --- END OF CONFIGURATION ---
+
+
+##
+# Shows GTK error message or console text output.
+# 
+# @param string text
+# 			Text of message will be displayed.
+##
+Error() {
+
+	if ( test $INTERACTIVE = 0 ); then
+		zenity --error --text="$1" 
+	else
+		echo "$1"
+	fi
+}
+
+##
+# Shows GTK information message or console text output.
+# 
+# @param string text
+# 			Text of message will be displayed.
+##
+Info() {
+
+	if ( test $INTERACTIVE = 0 ); then
+		zenity --info --text="$1"
+	else
+		echo "$1"
+	fi
+}
+
+##
+# Tests if any volume is mounted.
+# 
+# @param string 
+# 			Path to directory.
+# @return integer 
+# 			Returns 0 if mounted. 
+##
+Mounted() {
+  
+	if ( mount -l | grep "$1" > /dev/null ); then
+		return 0 
+	else
+		return 1 
+	fi
+}
+
+##
+# Mounts a decrypted TrueCrypt volume.
+# 
+# @return integer
+# 			Returns 0 if no errors occurred. 
+##
+Mount() {
+	
+	# Token exists...
+	if ( test -b $TOKENDEVICE ); then
+		# ...and is not mounted? 
+		if ( ! Mounted $TOKENPATH ); then
+			# --> mount it first!
+			mount $TOKENDEVICE && sleep 2
+		fi
+	else
+		if ( test $SILENT = 0 ); then
+			Error "Token not found!"
+		fi
+		return 1
+	fi
+	
+	# Keyfile exists?
+	if ( test -f $KEYFILE ); then
+		echo "Mounting..."      
+		truecrypt --text --non-interactive $MOUNTDEVICE $MOUNTPATH --keyfiles=$KEYFILE
+
+		if ( test $? != 0 ); then
+			Error "Error while mounting!"
+			return $?
+		else 
+			Info "Successfully mounted!"
+			return 0
+		fi
+	else
+		if ( test $SILENT = 0 ); then
+			Error "Keyfile not found!"   
+		fi
+		return 1
+	fi
+}
+  
+##
+# Dismounts a TrueCrypt volume.
+# 
+# @return integer
+# 			Returns 0 if no errors occurred. 
+##
+Dismount() {
+  
+	echo "Dismounting..."
+	truecrypt --text --non-interactive --dismount $MOUNTDEVICE 
+
+	if ( test $? != 0 ); then
+		Error "Error while dismounting!"		
+		return $?
+	else 
+		Info "Successfully dismounted!"
+		umount $TOKENDEVICE && sleep 2
+		return 0
+	fi  
+}
+
+# Main:
+
+if ( test "$2" = "--non-interactive" || test "$3" = "--non-interactive" ); then
+	INTERACTIVE=1
+else
+	INTERACTIVE=0
+fi
+
+if ( test "$2" = "--silent" || test "$3" = "--silent" ); then
+	SILENT=1   
+else
+	SILENT=0
+fi
+			
+case "$1" in
+	--dismount) 
+		Dismount
+	;;
+	
+	--mount)
+		Mount
+	;;
+		
+	--auto)
+		if ( Mounted $MOUNTPATH ); then
+			Dismount
+		else
+			Mount
+		fi
+	;;
+		
+	*)
+		echo "Invalid parameters!"
+		echo ""	
+		echo "Using: $0 [Action] [Options]"
+		echo "Action: --mount|--dismount|--auto"
+		echo "Options (optional): --silent|--non-interactive"
+		echo ""
+		echo "Action"
+		echo "--mount           Mount a decrypted TrueCrypt volume."
+		echo "--dismount        Dismount a Truecrypt volume."
+		echo "--auto            Either mount a Truecrypt volume if it is dismounted or dismount a TrueCrypt volume if it is mounted."
+		echo ""
+		echo "Options"
+		echo "--silent          Suppress errors if keyfile or token device was not found."
+		echo "--non-interactive Suppress GTK+ messages."
+		echo ""
+	;;
+esac
+	
+exit 0
