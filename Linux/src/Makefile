@@ -1,8 +1,10 @@
-BINDIR = $(DESTDIR)/usr/bin/
+BINDIR = $(DESTDIR)/usr/bin
 
 install:
-	cp -r files/etc/ $(DESTDIR)/
-	cp -r files/usr/ $(DESTDIR)/
+	install -D --mode 644 files/etc/tcscript.conf $(DESTDIR)/etc/tcscript.conf
+	install -D --mode 644 files/etc/init.d/tcscript $(DESTDIR)/etc/init.d/tcscript
+	install -D --mode 644 files/etc/bash_completion.d/tcscript $(DESTDIR)/etc/bash_completion.d/tcscript
+	install -D --mode 755 files/usr/bin/tcscript $(BINDIR)/tcscript
 
 uninstall:
 	rm -f $(BINDIR)/tcscript

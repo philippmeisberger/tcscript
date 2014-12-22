@@ -8,8 +8,12 @@
 # Short-Description: Automated TrueCrypt mounting and dismounting shell script.
 ### END INIT INFO
 
+## Define LSB log_* functions.
+## Note: Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
+. /lib/lsb/init-functions
+
 ## Include user configuration
-. /etc/tcscript/tcscript.conf
+. /etc/tcscript.conf
 
 case "${1}" in
 
@@ -23,8 +27,22 @@ case "${1}" in
         exit "${?}"
     ;;
 
+    restart|force-reload)
+        ${0} stop && sleep 2 && ${0} start
+    ;;
+
+    status)
+        if ( test -d "${MOUNTPATH}" = 0 ); then
+            log_success_msg "TCScript has mounted \"${MOUNTPATH}\""
+            exit 0
+        else
+            log_failure_msg "TCScript has not mounted \"${MOUNTPATH}\""
+            exit 1
+        fi
+    ;;
+    
     *)
-        echo "Usage: ${0} { start | stop }"
+        echo "Usage: ${0} { start | stop | restart | status }"
         exit 0
     ;;
     
