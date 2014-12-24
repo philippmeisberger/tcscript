@@ -32,7 +32,7 @@ case "${1}" in
     ;;
 
     status)
-        if ( test -d "${MOUNTPATH}" ); then
+        if ( mount -l | grep "${MOUNTPATH}" > /dev/null ); then
             log_success_msg "TCScript has mounted \"${MOUNTPATH}\""
             exit 0
         else
