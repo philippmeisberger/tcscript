@@ -6,13 +6,14 @@
 AppId={{CEC2B9D6-D391-470A-8A1A-EBC0B6CFF71B}
 AppName={#MyAppName}
 AppVersion=2.5
-AppVerName={#MyAppName} v2.5
+AppVerName={#MyAppName} 2.5
 AppCopyright=Philipp Meisberger
 AppPublisher=PM Code Works
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}/tcscript.html
 ArchitecturesInstallIn64BitMode=x64 ia64
-CreateAppDir=no
+CreateAppDir=yes
+DefaultDirName={pf}\{#MyAppName}
 DisableDirPage=yes
 DisableProgramGroupPage=yes
 LicenseFile=copying.txt
@@ -21,6 +22,8 @@ OutputDir=.
 OutputBaseFilename=tcscript_setup
 Compression=lzma
 SolidCompression=yes
+VersionInfoVersion=2.2
+SignTool=Sign {srcexe}
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -73,16 +76,16 @@ end;
 
 function InitializeSetup(): Boolean;
 var
-  path: string;
+  Path: string;
 
 begin
-  if not RegQueryStringValue(HKLM, 'SOFTWARE\Classes\TrueCryptVolume\DefaultIcon', '', path) then
-     begin
-     MsgBox('TrueCrypt-Installationsordner wurde nicht gefunden! Bitte installieren Sie zuerst TrueCrypt!' +#13+ 'Setup wird beendet!', mbERROR, MB_OK);
-     result := False;
-     end  //of begin
+  if not RegQueryStringValue(HKLM, 'SOFTWARE\Classes\TrueCryptVolume\DefaultIcon', '', Path) then
+  begin
+    MsgBox('TrueCrypt-Installationsordner wurde nicht gefunden! Bitte installieren Sie zuerst TrueCrypt!' +#13+ 'Setup wird beendet!', mbERROR, MB_OK);
+    result := False;
+  end  //of begin
   else
-     result := True;
+    result := True;
 end;
 
 [Registry]
