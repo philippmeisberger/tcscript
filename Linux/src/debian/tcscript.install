@@ -1,0 +1,4 @@
+debian/bash_completion.d/tcscript etc/bash_completion.d
+debian/init.d/tcscript etc/init.d
+files/tcscript usr/bin
+files/tcscript.conf etc
