@@ -7,7 +7,7 @@
 .nf
 .fam C
 \fBtcscript\fP [Action] [Options]
-Action: [\fB--mount\fP | \fB--dismount\fP | \fB--auto\fP | \fB--version\fP | \fB--help\fP]
+Action: [\fB--mount\fP | \fB--dismount\fP | \fB--auto\fP | \fB--status\fP | \fB--version\fP | \fB--help\fP]
 Options: [\fB--debug\fP | \fB--silent\fP | \fB--interactive\fP]
 .fam T
 .fi
@@ -39,6 +39,10 @@ Dismounts a TrueCrypt volume.
 .TP 
 \fB--auto\fR, \fB-a\fR
 Either mounts a TrueCrypt volume if it is dismounted or dismounts a TrueCrypt volume if it is mounted.
+
+.TP
+\fB--status\fR, \fB-s\fR
+Prints the status of the mount device.
 
 .TP
 \fB--version\fR, \fB-v\fR

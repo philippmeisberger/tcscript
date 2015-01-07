@@ -2,24 +2,24 @@
 ##
 ## TrueCrypt mounting and dismounting script.
 ##
-VERSION="2.5"
+VERSION="2.7"
 ##
-## @author Philipp Meisberger <team@pm-codeworks.de> 
+## @author Philipp Meisberger <team@pm-codeworks.de>
 ## @depends TrueCrypt, Zenity
-## @licence BSD
+## @licence BSD-3-Licence
 ##
-## Usage: tcscript [Action] [Options] 
-## Action: --mount | --dismount | --auto | --version
+## Usage: tcscript [Action] [Options]
+## Action: --mount | --dismount | --auto | --status | --version
 ## Options (optional): --debug | --silent | --interactive
-## 
+##
 ## Action
-## --mount              Mounts a decrypted TrueCrypt volume. 
-## --dismount           Dismounts a Truecrypt volume. 
+## --mount              Mounts a decrypted TrueCrypt volume.
+## --dismount           Dismounts a Truecrypt volume.
 ## --auto               Either mounts a TrueCrypt volume if it is dismounted or dismounts a TrueCrypt volume if it is mounted.
 ## --version            Prints version and exits.
 ##
 ## Options
-## --debug              Print debug messages. 
+## --debug              Print debug messages.
 ## --silent             Suppress errors if keyfile or token device was not found.
 ## --interactive        Uses Zenity to show GTK+ messages instead of console output.
 ##
@@ -29,7 +29,7 @@ VERSION="2.5"
 
 ##
 # Shows GTK error message or console text output.
-# 
+#
 # @param string
 #             Text of message that will be displayed.
 # @return void
@@ -37,7 +37,7 @@ VERSION="2.5"
 Error()
 {
     if ( test "${INTERACTIVE}" = 0 ); then
-        zenity --error --title="TCScript" --text="${1}" 
+        zenity --error --title="TCScript" --text="${1}"
     else
         echo "[\033[31mError\033[0m] ${1}" 1>&2
 
@@ -49,7 +49,7 @@ Error()
 
 ##
 # Shows GTK information message or console text output.
-# 
+#
 # @param string
 #             Text of message that will be displayed.
 # @return void
@@ -70,14 +70,14 @@ Info()
 ##
 # Prints debug messages to console.
 #
-# @param string 
+# @param string
 # @return void
 ##
 Debug()
 {
     if ( test "${DEBUG}" = 0 ); then
         echo "[DEBUG] ${1}"
-        
+
         if ( test "${LOGGING}" = 0 ); then
             echo "`date +'%Y-%m-%d %T'` [DEBUG] ${1}" >> "${DEBUGLOG}"
         fi
@@ -86,39 +86,39 @@ Debug()
 
 ##
 # Tests if any volume is mounted.
-# 
-# @param string 
+#
+# @param string
 #             Path to directory.
-# @return integer 
-#             Returns 0 if mounted. 
+# @return integer
+#             Returns 0 if mounted.
 ##
 Mounted()
 {
     if ( mount -l | grep "${1}" > /dev/null ); then
-        return 0 
+        return 0
     else
-        return 1 
+        return 1
     fi
 }
 
 ##
 # Mounts a decrypted TrueCrypt volume.
-# 
+#
 # @return integer
-#             Returns 0 if no errors occurred. 
+#             Returns 0 if no errors occurred.
 ##
 Mount()
-{    
+{
     ## Token exists...
     if ( test -b "${TOKENDEVICE}" ); then
         Debug "Token exists!"
 
-        ## ...and is not mounted? 
+        ## ...and is not mounted?
         if ( ! Mounted "${TOKENPATH}" ); then
             ## mount it first!
-            Debug "Mounting token..."            
+            Debug "Mounting token..."
             MOUNTINFO="`mount -v ${TOKENDEVICE}`"
-            
+
             if ( test "${?}" = 0 ); then
                 sleep 2
                 Debug "${MOUNTINFO}"
@@ -138,7 +138,7 @@ Mount()
         fi
         return 1
     fi
-    
+
     ## Keyfile does not exist?
     if ( ! test -f "${KEYFILE}" ); then
 
@@ -153,19 +153,19 @@ Mount()
     fi
 
     ## Device exists?
-    if ( test -b "${MOUNTDEVICE}" ); then    
+    if ( test -b "${MOUNTDEVICE}" ); then
         echo "Mounting..."
         Debug "Device:  ${MOUNTDEVICE}"
         Debug "Path:    ${MOUNTPATH}"
         Debug "Keyfile: ${KEYFILE}"
         truecrypt --text --non-interactive "${MOUNTDEVICE}" "${MOUNTPATH}" --keyfiles="${KEYFILE}"
         RESULT=$?
-        
+
         if ( test "${RESULT}" != 0 ); then
             Debug "Error: ${RESULT}"
             Error "Error while mounting!"
             return "${RESULT}"
-        else 
+        else
             Info "Successfully mounted!"
             return 0
         fi
@@ -175,12 +175,12 @@ Mount()
         return 1
     fi
 }
-  
+
 ##
 # Dismounts a TrueCrypt volume.
-# 
+#
 # @return integer
-#             Returns 0 if no errors occurred. 
+#             Returns 0 if no errors occurred.
 ##
 Dismount()
 {
@@ -190,7 +190,7 @@ Dismount()
         Debug "${MOUNTDEVICE}"
         return 1
     fi
-    
+
     echo "Dismounting..."
     Debug "Device:  ${MOUNTDEVICE}"
     Debug "Path:    ${MOUNTPATH}"
@@ -199,12 +199,12 @@ Dismount()
 
     if ( test "${RESULT}" != 0 ); then
         Debug "Error: ${RESULT}"
-        Error "Error while dismounting!"        
+        Error "Error while dismounting!"
         return "${RESULT}"
-    else 
+    else
         Info "Successfully dismounted!"
         UMOUNTINFO="`umount -v ${TOKENDEVICE}`"
-        
+
         if ( test "${?}" = 0 ); then
             sleep 2
             Debug "${UMOUNTINFO}"
@@ -237,7 +237,7 @@ else
     fi
 
     if ( test "${2}" = "--silent" || test "${3}" = "--silent" ); then
-        SILENT=0   
+        SILENT=0
     else
         SILENT=1
     fi
@@ -246,7 +246,7 @@ fi
 
 case "${1}" in
 
-    --dismount|-d) 
+    --dismount|-d)
         ## Device mounted?
         if ( Mounted "${MOUNTPATH}" ); then
             Dismount
@@ -257,7 +257,7 @@ case "${1}" in
             exit 1
         fi
     ;;
-    
+
     --mount|-m)
         # Device dismounted?
         if ( ! Mounted "${MOUNTPATH}" ); then
@@ -268,9 +268,9 @@ case "${1}" in
             Debug "Device:  ${MOUNTDEVICE}"
             Debug "Path:    ${MOUNTPATH}"
             exit 1
-        fi        
+        fi
     ;;
-        
+
     --auto|-a)
         if ( Mounted "${MOUNTPATH}" ); then
             Dismount
@@ -281,27 +281,39 @@ case "${1}" in
         fi
     ;;
 
+    --status|-s)
+        ## Device mounted?
+        if ( Mounted "${MOUNTPATH}" ); then
+            Info "TCScript has mounted \"${MOUNTPATH}\"."
+            exit 0
+        else
+            Error "TCScript has not mounted \"${MOUNTPATH}\"."
+            exit 1
+        fi
+    ;;
+
     --version|-v)
         echo "`basename ${0}` version ${VERSION}"
         exit 0
     ;;
-        
+
     *)
         if ( test "${1}" != "--help" ); then
             echo "Invalid argument \"${1}\"!"
             echo ""
         fi
-        
+
         echo "TrueCrypt mounting and dismounting script."
-        echo ""    
+        echo ""
         echo "Usage: `basename ${0}` [Action] [Options]"
-        echo "Action: --mount | --dismount | --auto | --version"
-        echo "Options (optional): --debug | --silent | --non-interactive"
+        echo "Action: --mount | --dismount | --auto | --status | --version"
+        echo "Options (optional): --debug | --silent | --interactive"
         echo ""
         echo "Action"
         echo "--mount            Mounts a decrypted TrueCrypt volume."
         echo "--dismount         Dismounts a Truecrypt volume."
         echo "--auto             Either mounts a Truecrypt volume if it is dismounted or dismounts a TrueCrypt volume if it is mounted."
+        echo "--status           Prints the status of the mount device."
         echo "--version          Prints version and exits."
         echo ""
         echo "Options"
@@ -311,5 +323,5 @@ case "${1}" in
         echo ""
         exit 0
     ;;
-    
+
 esac
