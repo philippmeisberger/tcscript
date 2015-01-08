@@ -2,7 +2,7 @@
 ::
 :: TrueCrypt mounting and dismounting script.
 ::
-set VERSION=2.5
+set VERSION=2.7
 ::
 :: @author Philipp Meisberger <team@pm-codeworks.de>
 :: @depends TrueCrypt, Zenity
@@ -11,17 +11,18 @@ set VERSION=2.5
 :: Usage: tcscript.bat [Action] [Option]
 :: Action: /mount | /dismount | /auto | /version
 :: Option (optional): /debug | /silent
-:: 
+::
 :: Action
-:: /mount              Mounts a decrypted TrueCrypt volume. 
-:: /dismount           Dismounts a Truecrypt volume. 
-:: /auto               Either mounts a Truecrypt volume if it is dismounted or dismounts a TrueCrypt volume if it is mounted.
-:: /version            Prints version and exits.
+:: /mount            Mounts a decrypted TrueCrypt volume.
+:: /dismount         Dismounts a Truecrypt volume.
+:: /auto             Either mounts a Truecrypt volume if it is dismounted or dismounts a TrueCrypt volume if it is mounted.
+:: /status           Prints status of mount device.
+:: /version          Prints version and exits.
 ::
 :: Option
-:: /debug              Prints debug messages. 
-:: /silent             Suppress errors if keyfile was not found.
-:: /interactive        Uses Zenity to show GTK+ messages instead of console output.
+:: /debug            Prints debug messages.
+:: /silent           Suppress errors if keyfile was not found.
+:: /interactive      Uses Zenity to show GTK+ messages instead of console output.
 ::
 
 title TCScript
@@ -38,7 +39,7 @@ set SILENT=1
 
 :: Main start
 :: Parse options
-if "%2"=="/debug" ( 
+if "%2"=="/debug" (
     @echo on
 ) else (
     :: Check for interactive mode
@@ -73,16 +74,24 @@ if "%1"=="/dismount" (
                 goto :MOUNT
             )
         ) else (
-            if "%1"=="/version" (
-                echo "TCScript Version %VERSION%"
-                exit /b 0
+            if "%1"=="/status" (
+                if exist "%MOUNTPATH%" (
+                    call :INFO "TCScript has mounted %MOUNTPATH%"
+                ) else (
+                    call :ERROR "TCScript has not mounted %MOUNTPATH%"
+                )
             ) else (
-                if "%1" NEQ "/help" (
-                    echo Invalid argument "%1"!
+                if "%1"=="/version" (
+                    echo "TCScript Version %VERSION%"
+                    exit /b 0
+                ) else (
+                    if "%1" NEQ "/help" (
+                        echo Invalid argument "%1"!
+                    )
                 )
                 echo.
                 echo TrueCrypt console mounting and dismounting script.
-                echo.    
+                echo.
                 echo Usage: %0 [Action] [Option]
                 echo Action: /mount ^| /dismount ^| /auto ^| /version
                 echo optional Option: /debug ^| /silent
@@ -91,6 +100,7 @@ if "%1"=="/dismount" (
                 echo /mount            Mounts a decrypted TrueCrypt volume.
                 echo /dismount         Dismounts a Truecrypt volume.
                 echo /auto             Either mounts a Truecrypt volume if it is dismounted or dismounts a TrueCrypt volume if it is mounted.
+                echo /status           Prints status of mount device.
                 echo /version          Prints version and exits.
                 echo.
                 echo Option
@@ -107,7 +117,7 @@ if "%1"=="/dismount" (
 
 ::
 :: Shows GTK error message or console text output.
-:: 
+::
 :: @param string
 ::             Text of message that will be displayed.
 :: @return void
@@ -123,7 +133,7 @@ if "%1"=="/dismount" (
 
 ::
 :: Shows GTK information message or console text output.
-:: 
+::
 :: @param string
 ::             Text of message that will be displayed.
 :: @return void
@@ -138,9 +148,9 @@ if "%1"=="/dismount" (
 
 ::
 :: Mounts a decrypted TrueCrypt volume.
-:: 
+::
 :: @return integer
-::             Returns 0 if no errors occurred. 
+::             Returns 0 if no errors occurred.
 ::
 :MOUNT
     if not exist "%KEYFILE%" (
@@ -158,28 +168,28 @@ if "%1"=="/dismount" (
 
     timeout /T 1  > nul
     TrueCrypt.exe /q /v "%MOUNTDEVICE%" /l "%MOUNTPATH:~0,1%"  /p "" /k "%KEYFILE%"
-    
+
     if %ERRORLEVEL%==1 (
         call :ERROR "Error while mounting!"
         exit /b 1
     ) else (
         call :INFO "Successfully mounted!"
         exit /b 0
-    )    
+    )
 
 ::
 :: Dismounts a TrueCrypt volume.
-:: 
+::
 :: @return integer
-::             Returns 0 if no errors occurred. 
-::  
+::             Returns 0 if no errors occurred.
+::
 :DISMOUNT
     :: Device does not exist?
     if not exist "%MOUNTPATH%" (
         call :ERROR "Device not mounted!"
         exit /b 0
     )
-    
+
     timeout /T 1  > nul
     TrueCrypt.exe /q /d "%MOUNTPATH:~0,1%"
 
