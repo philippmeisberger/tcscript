@@ -5,8 +5,8 @@
 [Setup]
 AppId={{CEC2B9D6-D391-470A-8A1A-EBC0B6CFF71B}
 AppName={#MyAppName}
-AppVersion=2.5
-AppVerName={#MyAppName} 2.5
+AppVersion=2.7
+AppVerName={#MyAppName} 2.7
 AppCopyright=Philipp Meisberger
 AppPublisher=PM Code Works
 AppPublisherURL={#MyAppURL}
@@ -97,3 +97,4 @@ Root: HKLM; Subkey: "SOFTWARE\Classes\CLSID\{{645FF040-5081-101B-9F08-00AA002F95
 [UninstallDelete]     
 Type: filesandordirs; Name: "{pf}\TrueCrypt\tcscript.bat"
 Type: filesandordirs; Name: "{pf}\TrueCrypt\tcscript.conf.cmd"
+Type: filesandordirs; Name: "{pf}\TCScript"

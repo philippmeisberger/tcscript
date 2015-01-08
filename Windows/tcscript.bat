@@ -76,40 +76,43 @@ if "%1"=="/dismount" (
         ) else (
             if "%1"=="/status" (
                 if exist "%MOUNTPATH%" (
-                    call :INFO "TCScript has mounted %MOUNTPATH%"
+                    call :INFO "TCScript has mounted device!"
+                    exit /b 0
                 ) else (
-                    call :ERROR "TCScript has not mounted %MOUNTPATH%"
+                    call :ERROR "TCScript has not mounted device!"
+                    exit /b 1
                 )
             ) else (
                 if "%1"=="/version" (
                     echo "TCScript Version %VERSION%"
                     exit /b 0
                 ) else (
-                    if "%1" NEQ "/help" (
+                    if "%1"=="/help" (
+                        echo.
+                        echo TrueCrypt console mounting and dismounting script.
+                        echo.
+                        echo Usage: %0 [Action] [Option]
+                        echo Action: /mount ^| /dismount ^| /auto ^| /version
+                        echo optional Option: /debug ^| /silent
+                        echo.
+                        echo Action
+                        echo /mount            Mounts a decrypted TrueCrypt volume.
+                        echo /dismount         Dismounts a Truecrypt volume.
+                        echo /auto             Either mounts a Truecrypt volume if it is dismounted or dismounts a TrueCrypt volume if it is mounted.
+                        echo /status           Prints status of mount device.
+                        echo /version          Prints version and exits.
+                        echo.
+                        echo Option
+                        echo /debug            Print debug messages. NOTE: If set, other options will be ignored.
+                        echo /silent           Suppress errors if keyfile or token device was not found.
+                        echo /interactive      Uses Zenity to show messages instead of console output.
+                        echo.
+                        exit /b 0
+                    ) else (
                         echo Invalid argument "%1"!
+                        exit /b 1
                     )
                 )
-                echo.
-                echo TrueCrypt console mounting and dismounting script.
-                echo.
-                echo Usage: %0 [Action] [Option]
-                echo Action: /mount ^| /dismount ^| /auto ^| /version
-                echo optional Option: /debug ^| /silent
-                echo.
-                echo Action
-                echo /mount            Mounts a decrypted TrueCrypt volume.
-                echo /dismount         Dismounts a Truecrypt volume.
-                echo /auto             Either mounts a Truecrypt volume if it is dismounted or dismounts a TrueCrypt volume if it is mounted.
-                echo /status           Prints status of mount device.
-                echo /version          Prints version and exits.
-                echo.
-                echo Option
-                echo /debug            Print debug messages. NOTE: If set, other options will be ignored.
-                echo /silent           Suppress errors if keyfile or token device was not found.
-                echo /interactive      Uses Zenity to show messages instead of console output.
-                echo.
-                pause
-                exit /b 0
             )
         )
     )
@@ -127,9 +130,8 @@ if "%1"=="/dismount" (
         zenity --error --title="TCScript" --text="%~1"
     ) else (
         echo [Error] %~1
-        pause
     )
-    exit :ERROR
+    goto :EOF
 
 ::
 :: Shows GTK information message or console text output.
@@ -144,7 +146,7 @@ if "%1"=="/dismount" (
     ) else (
         echo [Info] %~1
     )
-    exit :INFO
+    goto :EOF
 
 ::
 :: Mounts a decrypted TrueCrypt volume.
