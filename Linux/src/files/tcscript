@@ -6,7 +6,7 @@ VERSION="2.7"
 ##
 ## @author Philipp Meisberger <team@pm-codeworks.de>
 ## @depends TrueCrypt, Zenity
-## @licence BSD-3-Licence
+## @licence D-FSL (http://www.dipp.nrw.de/d-fsl/lizenzen/en/D-FSL-1_0_en.txt)
 ##
 ## Usage: tcscript [Action] [Options]
 ## Action: --mount | --dismount | --auto | --status | --version

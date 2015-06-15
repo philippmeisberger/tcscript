@@ -6,7 +6,7 @@ set VERSION=2.7
 ::
 :: @author Philipp Meisberger <team@pm-codeworks.de>
 :: @depends TrueCrypt, Zenity
-:: @licence BSD
+:: @licence D-FSL (http://www.dipp.nrw.de/d-fsl/lizenzen/en/D-FSL-1_0_en.txt)
 ::
 :: Usage: tcscript.bat [Action] [Option]
 :: Action: /mount | /dismount | /auto | /version
