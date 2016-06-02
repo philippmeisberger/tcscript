@@ -1,0 +1,3 @@
+debian/init.d/tcscript etc/init.d
+src/tcscript usr/bin
+src/tcscript.conf etc

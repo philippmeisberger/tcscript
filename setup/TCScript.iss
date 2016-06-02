@@ -35,8 +35,8 @@ Name: "recyclebin"; Description: "{cm:RecycleBinContextDesc}"; GroupDescription:
 Name: "computer"; Description: "{cm:ComputerContextDesc}"; GroupDescription: "{cm:GroupContextDesc}"
 
 [Files]
-Source: "..\{#MyAppExeName}"; DestDir: "{pf}\TrueCrypt"; Flags: ignoreversion
-Source: "..\tcscript.conf.cmd"; DestDir: "{pf}\TrueCrypt"; Flags: onlyifdoesntexist
+Source: "..\src\{#MyAppExeName}"; DestDir: "{pf}\TrueCrypt"; Flags: ignoreversion
+Source: "..\src\tcscript.conf.cmd"; DestDir: "{pf}\TrueCrypt"; Flags: onlyifdoesntexist
 
 [CustomMessages]
 GroupContextDesc=Kontextmenü-Einträge hinzufügen

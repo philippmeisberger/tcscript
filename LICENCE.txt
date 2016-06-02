@@ -1,11 +1,10 @@
-
-German Free Software License
+﻿German Free Software License
 
 (c) Ministry of Science and Research, State of 
 North-Rhine Westphalia 2004
 
 Developed and created by Axel Metzger and Till 
-Jaeger, Institut f�r Rechtsfragen der Freien und 
+Jaeger, Institut für Rechtsfragen der Freien und 
 Open Source Software (Institute for Legal Issues 
 On Free and Open Source Software), 
 <http://www.ifross.de>.
@@ -438,8 +437,3 @@ License
 
 The License may be obtained under <http://www.d-
 fsl.org>."
-
-
-
-
-
