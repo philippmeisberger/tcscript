@@ -16,14 +16,14 @@ CreateAppDir=yes
 DefaultDirName={pf}\{#MyAppName}
 DisableDirPage=yes
 DisableProgramGroupPage=yes
-LicenseFile=eula.txt
+LicenseFile=..\LICENCE.txt
 InfoAfterFile=post.txt
 OutputDir=.
 OutputBaseFilename=tcscript_setup
 Compression=lzma
 SolidCompression=yes
-VersionInfoVersion=2.2
-SignTool=Sign {srcexe}
+VersionInfoVersion=2.5
+SignTool=MySignTool sign /v /sha1 A9A273A222A5DD3ED9EC2F46232AAD8E087EA4ED /tr http://timestamp.globalsign.com/scripts/timstamp.dll /as /fd SHA256 /td SHA256 $f
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -35,8 +35,8 @@ Name: "recyclebin"; Description: "{cm:RecycleBinContextDesc}"; GroupDescription:
 Name: "computer"; Description: "{cm:ComputerContextDesc}"; GroupDescription: "{cm:GroupContextDesc}"
 
 [Files]
-Source: "..\src\{#MyAppExeName}"; DestDir: "{pf}\TrueCrypt"; Flags: ignoreversion
-Source: "..\src\tcscript.conf.cmd"; DestDir: "{pf}\TrueCrypt"; Flags: onlyifdoesntexist
+Source: "..\src\{#MyAppExeName}"; DestDir: GetTrueCryptInstallDir; Flags: ignoreversion
+Source: "..\src\tcscript.conf.cmd"; DestDir: GetTrueCryptInstallDir; Flags: onlyifdoesntexist
 
 [CustomMessages]
 GroupContextDesc=Kontextmenü-Einträge hinzufügen
@@ -47,6 +47,8 @@ ComputerContextDesc=Kontextmenü-Eintrag "TrueCrypt Mount/Dismount" in Computer h
 BeveledLabel=Inno Setup
 
 [Code]
+
+
 procedure UrlLabelClick(Sender: TObject);
 var
   ErrorCode : Integer;
@@ -54,7 +56,6 @@ var
 begin
   ShellExec('open', ExpandConstant('{#MyAppURL}'), '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
 end;
-
 
 procedure InitializeWizard;
 var
@@ -74,18 +75,23 @@ begin
   UrlLabel.Parent := WizardForm;
 end;
 
-function InitializeSetup(): Boolean;
-var
-  Path: string;
-
+function GetTrueCryptInstallDir(): string;
 begin
-  if not RegQueryStringValue(HKLM, 'SOFTWARE\Classes\TrueCryptVolume\DefaultIcon', '', Path) then
+  if RegQueryStringValue(HKCR, 'TypeLib\{1770F56C-7881-4591-A179-79B8001C7D42}\2.4\HELPDIR', '', Result) then
+    Result := AddBackslash(Result)
+  else
+    Result := '';
+end;
+
+function InitializeSetup(): Boolean;
+begin
+  if (GetTrueCryptInstallDir() = '') then
   begin
     MsgBox('TrueCrypt-Installationsordner wurde nicht gefunden! Bitte installieren Sie zuerst TrueCrypt!' +#13+ 'Setup wird beendet!', mbERROR, MB_OK);
-    result := False;
+    Result := False;
   end  //of begin
   else
-    result := True;
+    Result := True;
 end;
 
 [Registry]
