@@ -1,7 +1,7 @@
 TCScript
 ========
 
-TCScript simplifies the mounting and dismounting routine of a TrueCrypt volume. TrueCrypt is needed anyway! It is recommend that a keyfile is used for the decryption of the volume. Then this keyfile can be on a external SD card (token). The script can be used to mount a TrueCrypt volume while booting. The volume only gets mounted if the token is plugged in. On shutdown the volume gets automatically dismounted.
+TCScript simplifies and automates the mounting and dismounting routine of a TrueCrypt volume. TrueCrypt is needed anyway! It is recommend that a keyfile is used for the decryption of the volume. Then this keyfile can be on a external SD card (token). The script can be used to mount a TrueCrypt volume while booting. The volume only gets mounted if the token is plugged in. On shutdown the volume gets automatically dismounted.
 
 Linux
 -----
@@ -19,7 +19,7 @@ Add PM Codeworks key
 
 Install the packages
 
-    ~# apt-get install tcscript truecrypt
+    ~# apt-get install tcscript truecrypt zenity
 
 ### Setup
 
