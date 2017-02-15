@@ -4,7 +4,7 @@ INNOSETUP="C:\Program Files (x86)\Inno Setup 5\Compil32.exe"
 release: buildsetup source
 
 source:
-	hg archive -t zip $(PROJECTNAME)-src.zip
+	hg archive $(PROJECTNAME)-src.zip -X "setup/*.exe"
 
 buildsetup: setup\$(PROJECTNAME).iss
 	$(INNOSETUP) /cc setup\$(PROJECTNAME).iss
