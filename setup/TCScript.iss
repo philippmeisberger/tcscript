@@ -22,8 +22,8 @@ OutputDir=.
 OutputBaseFilename=tcscript_setup
 Compression=lzma
 SolidCompression=yes
-VersionInfoVersion=2.5
-SignTool=MySignTool sign /v /sha1 A9A273A222A5DD3ED9EC2F46232AAD8E087EA4ED /tr http://timestamp.globalsign.com/scripts/timstamp.dll /as /fd SHA256 /td SHA256 $f
+VersionInfoVersion=2.7
+SignTool=MySignTool sign /v /n "PM Code Works" /tr http://timestamp.globalsign.com/scripts/timstamp.dll /td SHA256 /fd SHA256 $f
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -47,12 +47,10 @@ ComputerContextDesc=Kontextmenü-Eintrag "TrueCrypt Mount/Dismount" in Computer h
 BeveledLabel=Inno Setup
 
 [Code]
-
-
 procedure UrlLabelClick(Sender: TObject);
 var
   ErrorCode : Integer;
-  
+
 begin
   ShellExec('open', ExpandConstant('{#MyAppURL}'), '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
 end;
@@ -100,7 +98,7 @@ Root: HKLM; Subkey: "SOFTWARE\Classes\CLSID\{{20D04FE0-3AEA-1069-A2D8-08002B3030
 Root: HKLM; Subkey: "SOFTWARE\Classes\CLSID\{{645FF040-5081-101B-9F08-00AA002F954E}\shell\TrueCrypt Mount/Dismount"; Flags: dontcreatekey uninsdeletekey
 Root: HKLM; Subkey: "SOFTWARE\Classes\CLSID\{{645FF040-5081-101B-9F08-00AA002F954E}\shell\TrueCrypt Mount/Dismount\command"; ValueType: string; ValueName: ""; ValueData: "{pf}\TrueCrypt\tcscript.bat /auto /interactive"; Tasks: "recyclebin"
 
-[UninstallDelete]     
+[UninstallDelete]
 Type: filesandordirs; Name: "{pf}\TrueCrypt\tcscript.bat"
 Type: filesandordirs; Name: "{pf}\TrueCrypt\tcscript.conf.cmd"
 Type: filesandordirs; Name: "{pf}\TCScript"
