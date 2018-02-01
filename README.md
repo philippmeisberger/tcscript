@@ -8,13 +8,13 @@ Linux
 
 ### Installation
 
-Add PM Codeworks repository
+Add PM Code Works repository
 
-    ~# wget http://apt.pm-codeworks.de/pm-codeworks.list -P /etc/apt/sources.d/
+    `~# echo "deb http://apt.pm-codeworks.de stretch main" | tee /etc/apt/sources.list.d/pm-codeworks.list`
 
-Add PM Codeworks key
+Add PM Code Works key
 
-    ~# wget -O - http://apt.pm-codeworks.de/pm-codeworks.de.gpg | apt-key add -
+    ~# wget -qO - http://apt.pm-codeworks.de/pm-codeworks.de.gpg | apt-key add -
     ~# apt-get update
 
 Install the packages
